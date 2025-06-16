@@ -44,30 +44,42 @@ if coverage_filter != 'All':
 
 # 1. Mental Health by Country
 st.subheader("Mental Health Status by Country (Top 10)")
-top_countries = filtered['country'].value_counts().nlargest(10).index
-subset = filtered[filtered['country'].isin(top_countries)]
+mh_only = filtered[filtered['mental_health'] == 1]
+top_countries = mh_only['country'].value_counts().nlargest(10).index
+subset = mh_only[mh_only['country'].isin(top_countries)]
 fig, ax = plt.subplots()
 sns.countplot(data=subset, y="country", hue="mental_health", ax=ax)
 st.pyplot(fig)
 
 # 2. Age Distribution
-st.subheader("Age Distribution")
+st.subheader("Age Distribution (Mental Health Cases Only)")
 fig, ax = plt.subplots()
-sns.histplot(filtered['age'], bins=30, kde=True, ax=ax, color="skyblue")
+sns.histplot(mh_only['age'], bins=30, kde=True, ax=ax, color="skyblue")
 st.pyplot(fig)
 
 # 3. Gender Breakdown (Pie)
-st.subheader("Gender Distribution")
-gender_counts = filtered['gender'].value_counts()
+st.subheader("Gender Distribution (Mental Health Cases Only)")
+gender_counts = mh_only['gender'].value_counts()
 fig, ax = plt.subplots()
 ax.pie(gender_counts, labels=gender_counts.index, autopct='%1.1f%%', colors=sns.color_palette("pastel"))
 ax.axis("equal")
 st.pyplot(fig)
 
-# 4. Mental Health vs. Tech Company
-st.subheader("Mental Health by Tech Company Employment")
+# 4. Mental Health in Tech vs Non-tech Tech Companies
+st.subheader("Mental Health in Tech vs Non-Tech companies")
 fig, ax = plt.subplots()
-sns.countplot(data=filtered, x="tech_company", hue="mental_health", ax=ax)
+sns.countplot(data=mh_only, x="tech_company", color="lightcoral", ax=ax)
+st.pyplot(fig)
+
+#Mental health in Tech vs Non-tech employees
+st.subheader("Mental Health Cases: Tech vs Non-Tech Employees")
+
+# Plot counts of tech vs non-tech within this group
+fig, ax = plt.subplots()
+sns.countplot(data=mh_only, x='tech_company', palette='coolwarm', ax=ax)
+ax.set_xticklabels(['Non-Tech', 'Tech'])
+ax.set_xlabel("Employment Sector")
+ax.set_ylabel("Number of Respondents")
 st.pyplot(fig)
 
 # 5. Coworker Discussion vs Mental Health
