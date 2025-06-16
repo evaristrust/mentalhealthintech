@@ -44,7 +44,7 @@ if coverage_filter != 'All':
 
 # 1. Mental Health by Country
 st.subheader("Mental Health Status by Country (Top 10)")
-mh_only = filtered[filtered['mental_health'] == 1]
+mh_only = filtered[filtered['mental_health'] == 'Yes']
 top_countries = mh_only['country'].value_counts().nlargest(10).index
 subset = mh_only[mh_only['country'].isin(top_countries)]
 fig, ax = plt.subplots()
@@ -52,13 +52,13 @@ sns.countplot(data=subset, y="country", hue="mental_health", ax=ax)
 st.pyplot(fig)
 
 # 2. Age Distribution
-st.subheader("Age Distribution (Mental Health Cases Only)")
+st.subheader("Mental Healh - Age Distribution")
 fig, ax = plt.subplots()
 sns.histplot(mh_only['age'], bins=30, kde=True, ax=ax, color="skyblue")
 st.pyplot(fig)
 
 # 3. Gender Breakdown (Pie)
-st.subheader("Gender Distribution (Mental Health Cases Only)")
+st.subheader("Mental Health - Gender Distribution")
 gender_counts = mh_only['gender'].value_counts()
 fig, ax = plt.subplots()
 ax.pie(gender_counts, labels=gender_counts.index, autopct='%1.1f%%', colors=sns.color_palette("pastel"))
@@ -71,20 +71,15 @@ fig, ax = plt.subplots()
 sns.countplot(data=mh_only, x="tech_company", color="lightcoral", ax=ax)
 st.pyplot(fig)
 
-#Mental health in Tech vs Non-tech employees
-st.subheader("Mental Health Cases: Tech vs Non-Tech Employees")
-
-# Plot counts of tech vs non-tech within this group
-fig, ax = plt.subplots()
-sns.countplot(data=mh_only, x='tech_company', palette='coolwarm', ax=ax)
-ax.set_xticklabels(['Non-Tech', 'Tech'])
-ax.set_xlabel("Employment Sector")
-ax.set_ylabel("Number of Respondents")
-st.pyplot(fig)
-
 # 5. Coworker Discussion vs Mental Health
 st.subheader("Discussion with Coworkers vs Mental Health")
 fig, ax = plt.subplots()
 sns.countplot(data=filtered, x="mh_coworker_discussion", hue="mental_health", ax=ax)
+st.pyplot(fig)
+
+# 6. Employer Discussion vs Mental Health
+st.subheader("Discussion with employer vs Mental Health")
+fig, ax = plt.subplots()
+sns.countplot(data=filtered, x="mh_employer_discussion", hue="mental_health", ax=ax)
 st.pyplot(fig)
 
